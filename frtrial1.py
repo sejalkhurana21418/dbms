@@ -1,31 +1,59 @@
 import streamlit as st
 
-# Define some sample merchandise data
-merchandise = [
-    {'name': 'T-shirt', 'price': 20},
-    {'name': 'Hoodie', 'price': 40},
-    {'name': 'Mug', 'price': 10},
-    {'name': 'Sticker', 'price': 5},
+# Define some example product data
+product_data = [
+    {'name': 'Product 1', 'price': 10},
+    {'name': 'Product 2', 'price': 20},
+    {'name': 'Product 3', 'price': 30},
 ]
 
-# Define the Streamlit app
-def app():
-    st.title('Merchandise Store')
+# Define the main function to run the Streamlit app
+def run_app():
+    st.title('Merchandise Company')
 
-    # Display the merchandise data in a table
-    st.write('Here are some of our products:')
-    st.table(merchandise)
+    # Initialize the shopping cart
+    cart = {}
 
-    # Allow the user to select a product and quantity
-    product = st.selectbox('Select a product:', [item['name'] for item in merchandise])
-    quantity = st.number_input('Quantity:', min_value=1, value=1)
+    # Display the list of products and allow the user to add them to the cart
+    st.header('Products')
+    for product in product_data:
+        add_button = st.button(f'Add {product["name"]} to cart')
+        if add_button:
+            if product['name'] in cart:
+                cart[product['name']] += 1
+            else:
+                cart[product['name']] = 1
 
-    # Calculate the total price based on the selected product and quantity
-    total_price = next(item['price'] for item in merchandise if item['name'] == product) * quantity
+    # Display the contents of the cart
+    st.header('Cart')
+    if len(cart) == 0:
+        st.write('Your cart is empty')
+    else:
+        for product, quantity in cart.items():
+            st.write(f'{product}: {quantity}')
 
-    # Display the total price to the user
-    st.write(f'Total price for {quantity} {product}(s): ${total_price}')
+    # Display the user's orders and order history
+    st.header('Orders')
+    order_number = 1
+    while st.button(f'Show order {order_number}'):
+        order = get_order(order_number)
+        if order:
+            st.write(f'Order {order_number}: {order}')
+        else:
+            st.write(f'Order {order_number} not found')
+        order_number += 1
 
-# Run the Streamlit app
+# Define a function to retrieve an order by order number
+def get_order(order_number):
+    # In a real application, this function would retrieve the order from a database
+    # For this example, we will just return some example order data
+    if order_number == 1:
+        return {'items': [{'name': 'Product 1', 'price': 10, 'quantity': 2}], 'total': 20}
+    elif order_number == 2:
+        return {'items': [{'name': 'Product 2', 'price': 20, 'quantity': 1}, {'name': 'Product 3', 'price': 30, 'quantity': 3}], 'total': 110}
+    else:
+        return None
+
+# Run the app
 if __name__ == '__main__':
-    app()
+    run_app()
