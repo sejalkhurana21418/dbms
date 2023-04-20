@@ -12,12 +12,11 @@ con = mysql.connector.connect(
 # Create a cursor object to execute SQL queries
 cursor = con.cursor()
 
-import streamlit as st
-import pandas as pd
-import sqlite3
 
-# Connect to the database
-conn = sqlite3.connect('BrandedInk.db')
+import pandas as pd
+
+
+
 
 # Create a function to query the database and return results as a pandas dataframe
 def run_query(query):
