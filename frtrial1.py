@@ -6,7 +6,7 @@ import sqlite3
 #
 
 # Establish a connection to the database
-conn = sqlite3.connect.connect(
+conn = sqlite3.connect(
   host="127.0.0.1",
   user="root",
   password="sejal@2004",
