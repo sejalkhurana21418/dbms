@@ -1,59 +1,89 @@
 import streamlit as st
+import mysql.connector
 
-# Define some example product data
-product_data = [
-    {'name': 'Product 1', 'price': 10},
-    {'name': 'Product 2', 'price': 20},
-    {'name': 'Product 3', 'price': 30},
-]
+# Establish a connection to the database
+con = mysql.connector.connect(
+  host="127.0.0.1",
+  user="root",
+  password="sejal@2004",
+  database="BrandedInk",
+)
 
-# Define the main function to run the Streamlit app
-def run_app():
-    st.title('Merchandise Company')
+# Create a cursor object to execute SQL queries
+cursor = con.cursor()
 
-    # Initialize the shopping cart
-    cart = {}
+import streamlit as st
+import pandas as pd
+import sqlite3
 
-    # Display the list of products and allow the user to add them to the cart
-    st.header('Products')
-    for product in product_data:
-        add_button = st.button(f'Add {product["name"]} to cart')
-        if add_button:
-            if product['name'] in cart:
-                cart[product['name']] += 1
-            else:
-                cart[product['name']] = 1
+# Connect to the database
+conn = sqlite3.connect('BrandedInk.db')
 
-    # Display the contents of the cart
-    st.header('Cart')
-    if len(cart) == 0:
-        st.write('Your cart is empty')
-    else:
-        for product, quantity in cart.items():
-            st.write(f'{product}: {quantity}')
+# Create a function to query the database and return results as a pandas dataframe
+def run_query(query):
+    return pd.read_sql_query(query, conn)
 
-    # Display the user's orders and order history
-    st.header('Orders')
-    order_number = 1
-    while st.button(f'Show order {order_number}'):
-        order = get_order(order_number)
-        if order:
-            st.write(f'Order {order_number}: {order}')
-        else:
-            st.write(f'Order {order_number} not found')
-        order_number += 1
+# Define the Streamlit app
+def app():
+    st.title('Franchise Company Dashboard')
+    menu = ['Product', 'Customer', 'Cart', 'Cart Products', 'Coupon', 'Orderr', 'Billing Details', 'Category', 'Franchise']
+    choice = st.sidebar.selectbox('Select Entity', menu)
 
-# Define a function to retrieve an order by order number
-def get_order(order_number):
-    # In a real application, this function would retrieve the order from a database
-    # For this example, we will just return some example order data
-    if order_number == 1:
-        return {'items': [{'name': 'Product 1', 'price': 10, 'quantity': 2}], 'total': 20}
-    elif order_number == 2:
-        return {'items': [{'name': 'Product 2', 'price': 20, 'quantity': 1}, {'name': 'Product 3', 'price': 30, 'quantity': 3}], 'total': 110}
-    else:
-        return None
+    # Display data for the selected entity
+    if choice == 'Product':
+        st.subheader('Product List')
+        query = 'SELECT * FROM product'
+        results = run_query(query)
+        st.dataframe(results)
 
-# Run the app
+    elif choice == 'Customer':
+        st.subheader('Customer List')
+        query = 'SELECT * FROM customer'
+        results = run_query(query)
+        st.dataframe(results)
+
+    elif choice == 'Cart':
+        st.subheader('Cart List')
+        query = 'SELECT * FROM cart'
+        results = run_query(query)
+        st.dataframe(results)
+
+    elif choice == 'Cart Products':
+        st.subheader('Cart Products List')
+        query = 'SELECT * FROM cart_products'
+        results = run_query(query)
+        st.dataframe(results)
+
+    elif choice == 'Coupon':
+        st.subheader('Coupon List')
+        query = 'SELECT * FROM coupon'
+        results = run_query(query)
+        st.dataframe(results)
+
+    elif choice == 'Order':
+        st.subheader('Order List')
+        query = 'SELECT * FROM order'
+        results = run_query(query)
+        st.dataframe(results)
+
+    elif choice == 'Billing Details':
+        st.subheader('Billing Details List')
+        query = 'SELECT * FROM billing_details'
+        results = run_query(query)
+        st.dataframe(results)
+
+    elif choice == 'Category':
+        st.subheader('Category List')
+        query = 'SELECT * FROM category'
+        results = run_query(query)
+        st.dataframe(results)
+
+    elif choice == 'Franchise':
+        st.subheader('Franchise List')
+        query = 'SELECT * FROM franchise'
+        results = run_query(query)
+        st.dataframe(results)
+
+# Run the Streamlit app
 if __name__ == '__main__':
-    run_app()
+    app()
