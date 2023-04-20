@@ -1,8 +1,12 @@
 import streamlit as st
-import mysql.connector
+
+
+import sqlite3
+
+#
 
 # Establish a connection to the database
-con = mysql.connector.connect(
+conn = sqlite3.connect.connect(
   host="127.0.0.1",
   user="root",
   password="sejal@2004",
@@ -10,7 +14,7 @@ con = mysql.connector.connect(
 )
 
 # Create a cursor object to execute SQL queries
-cursor = con.cursor()
+cursor = conn.cursor()
 
 
 import pandas as pd
